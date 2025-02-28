@@ -1,0 +1,2387 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.openStep('C:/Users/s12ma4/Desktop/berkovich.STEP', scaleFromFile=OFF)
+mdb.models['Model-1'].PartFromGeometryFile(combine=False, dimensionality=
+    THREE_D, geometryFile=mdb.acis, mergeSolidRegions=True, name='berkovich', 
+    type=DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['berkovich'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=1.0)
+mdb.models['Model-1'].parts['berkovich'].generateMesh()
+mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=200.0)
+mdb.models['Model-1'].sketches['__profile__'].CircleByCenterPerimeter(center=(
+    0.0, 0.0), point1=(50.0, 0.0))
+mdb.models['Model-1'].Part(dimensionality=THREE_D, name='Part-2', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Part-2'].BaseSolidExtrude(depth=50.0, sketch=
+    mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((210000.0, 0.3), 
+    ))
+mdb.models['Model-1'].HomogeneousSolidSection(material='Material-1', name=
+    'Section-1', thickness=None)
+mdb.models['Model-1'].parts['Part-2'].Set(cells=
+    mdb.models['Model-1'].parts['Part-2'].cells.getSequenceFromMask(('[#1 ]', 
+    ), ), name='Set-1')
+mdb.models['Model-1'].parts['Part-2'].SectionAssignment(offset=0.0, 
+    offsetField='', offsetType=MIDDLE_SURFACE, region=
+    mdb.models['Model-1'].parts['Part-2'].sets['Set-1'], sectionName=
+    'Section-1', thicknessAssignment=FROM_SECTION)
+mdb.models['Model-1'].parts['berkovich'].Set(cells=
+    mdb.models['Model-1'].parts['berkovich'].cells.getSequenceFromMask((
+    '[#1 ]', ), ), name='Set-1')
+mdb.models['Model-1'].parts['berkovich'].SectionAssignment(offset=0.0, 
+    offsetField='', offsetType=MIDDLE_SURFACE, region=
+    mdb.models['Model-1'].parts['berkovich'].sets['Set-1'], sectionName=
+    'Section-1', thicknessAssignment=FROM_SECTION)
+mdb.models['Model-1'].rootAssembly.DatumCsysByDefault(CARTESIAN)
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='Part-2-1', 
+    part=mdb.models['Model-1'].parts['Part-2'])
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='berkovich-1', 
+    part=mdb.models['Model-1'].parts['berkovich'])
+mdb.models['Model-1'].ConstrainedSketch(name='__edit__', objectToCopy=
+    mdb.models['Model-1'].parts['Part-2'].features['Solid extrude-1'].sketch)
+mdb.models['Model-1'].parts['Part-2'].projectReferencesOntoSketch(filter=
+    COPLANAR_EDGES, sketch=mdb.models['Model-1'].sketches['__edit__'], 
+    upToFeature=
+    mdb.models['Model-1'].parts['Part-2'].features['Solid extrude-1'])
+mdb.models['Model-1'].sketches['__edit__'].HorizontalDimension(textPoint=(
+    47.0890172487214, 16.811438205865), value=25.0, vertex1=
+    mdb.models['Model-1'].sketches['__edit__'].vertices[0], vertex2=
+    mdb.models['Model-1'].sketches['__edit__'].vertices[1])
+mdb.models['Model-1'].parts['Part-2'].features['Solid extrude-1'].setValues(
+    sketch=mdb.models['Model-1'].sketches['__edit__'])
+del mdb.models['Model-1'].sketches['__edit__']
+mdb.models['Model-1'].parts['Part-2'].regenerate()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.models['Model-1'].ConstrainedSketch(name='__edit__', objectToCopy=
+    mdb.models['Model-1'].parts['Part-2'].features['Solid extrude-1'].sketch)
+mdb.models['Model-1'].parts['Part-2'].projectReferencesOntoSketch(filter=
+    COPLANAR_EDGES, sketch=mdb.models['Model-1'].sketches['__edit__'], 
+    upToFeature=
+    mdb.models['Model-1'].parts['Part-2'].features['Solid extrude-1'])
+mdb.models['Model-1'].sketches['__edit__'].delete(objectList=(
+    mdb.models['Model-1'].sketches['__edit__'].dimensions[0], ))
+mdb.models['Model-1'].sketches['__edit__'].RadialDimension(curve=
+    mdb.models['Model-1'].sketches['__edit__'].geometry[2], radius=25.0, 
+    textPoint=(-69.9939117431641, 11.6931800842285))
+mdb.models['Model-1'].parts['Part-2'].features['Solid extrude-1'].setValues(
+    sketch=mdb.models['Model-1'].sketches['__edit__'])
+del mdb.models['Model-1'].sketches['__edit__']
+mdb.models['Model-1'].parts['Part-2'].regenerate()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.models['Model-1'].rootAssembly.rotate(angle=90.0, axisDirection=(1.0, 0.0, 
+    0.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('berkovich-1', ))
+mdb.models['Model-1'].rootAssembly.translate(instanceList=('berkovich-1', ), 
+    vector=(0.0, 0.0, -10.0))
+mdb.models['Model-1'].rootAssembly.translate(instanceList=('berkovich-1', ), 
+    vector=(-5.0, -5.0, 0.0))
+mdb.models['Model-1'].StaticStep(maxNumInc=10000, name='Step-1', nlgeom=ON, 
+    previous='Initial')
+mdb.models['Model-1'].rootAssembly.Surface(name='master', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['berkovich-1'].faces.getSequenceFromMask(
+    ('[#e0 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Surface(name='Slave', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-2-1'].faces.getSequenceFromMask(
+    ('[#4 ]', ), ))
+mdb.models['Model-1'].parts['berkovich'].ReferencePoint(point=
+    mdb.models['Model-1'].parts['berkovich'].InterestingPoint(
+    mdb.models['Model-1'].parts['berkovich'].edges[14], MIDDLE))
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.models['Model-1'].rootAssembly.Set(cells=
+    mdb.models['Model-1'].rootAssembly.instances['berkovich-1'].cells.getSequenceFromMask(
+    ('[#1 ]', ), ), name='b_Set-1')
+mdb.models['Model-1'].RigidBody(bodyRegion=
+    mdb.models['Model-1'].rootAssembly.sets['b_Set-1'], name='Constraint-1', 
+    refPointRegion=Region(referencePoints=(
+    mdb.models['Model-1'].rootAssembly.instances['berkovich-1'].referencePoints[4], 
+    )))
+mdb.models['Model-1'].ContactProperty('IntProp-1')
+mdb.models['Model-1'].interactionProperties['IntProp-1'].TangentialBehavior(
+    formulation=FRICTIONLESS)
+mdb.models['Model-1'].interactionProperties['IntProp-1'].NormalBehavior(
+    allowSeparation=ON, constraintEnforcementMethod=DEFAULT, 
+    pressureOverclosure=HARD)
+mdb.models['Model-1'].SurfaceToSurfaceContactStd(adjustMethod=NONE, 
+    clearanceRegion=None, createStepName='Step-1', datumAxis=None, 
+    initialClearance=OMIT, interactionProperty='IntProp-1', master=
+    mdb.models['Model-1'].rootAssembly.surfaces['master'], name='Int-1', slave=
+    mdb.models['Model-1'].rootAssembly.surfaces['Slave'], sliding=FINITE, 
+    thickness=ON)
+mdb.models['Model-1'].rootAssembly.Set(name='Set-3', referencePoints=(
+    mdb.models['Model-1'].rootAssembly.instances['berkovich-1'].referencePoints[4], 
+    ))
+mdb.models['Model-1'].ConcentratedForce(cf3=0.02, createStepName='Step-1', 
+    distributionType=UNIFORM, field='', localCsys=None, name='Load-1', region=
+    mdb.models['Model-1'].rootAssembly.sets['Set-3'])
+mdb.models['Model-1'].rootAssembly.Set(faces=
+    mdb.models['Model-1'].rootAssembly.instances['Part-2-1'].faces.getSequenceFromMask(
+    ('[#2 ]', ), ), name='Set-4')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-1', region=mdb.models['Model-1'].rootAssembly.sets['Set-4'], u1=0.0, 
+    u2=0.0, u3=0.0, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(name='Set-5', referencePoints=(
+    mdb.models['Model-1'].rootAssembly.instances['berkovich-1'].referencePoints[4], 
+    ))
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-2', region=mdb.models['Model-1'].rootAssembly.sets['Set-5'], u1=0.0, 
+    u2=0.0, u3=UNSET, ur1=0.0, ur2=0.0, ur3=0.0)
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].parts['Part-2'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=1.0)
+mdb.models['Model-1'].parts['Part-2'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='nanoindentation', nodalOutputPrecision=
+    SINGLE, numCpus=1, numGPUs=0, queue=None, resultsFormat=ODB, scratch='', 
+    type=ANALYSIS, userSubroutine='', waitHours=0, waitMinutes=0)
+mdb.jobs['nanoindentation'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\temp\\nanoindentation.odb', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 2120, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 2 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'nanoindentation', 'memory': 6554.0})
+mdb.jobs['nanoindentation']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 7592.0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(MINIMUM_MEMORY, {'minimum_memory': 864.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0, 
+    'attempts': ' 1U', 'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 
+    'step': 1, 'jobName': 'nanoindentation', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0, 
+    'attempts': ' 2U', 'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.0, 
+    'step': 1, 'jobName': 'nanoindentation', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0, 
+    'attempts': ' 3U', 'timeIncrement': 0.0625, 'increment': 1, 
+    'stepTime': 0.0, 'step': 1, 'jobName': 'nanoindentation', 'severe': 0, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0, 
+    'attempts': ' 4U', 'timeIncrement': 0.015625, 'increment': 1, 
+    'stepTime': 0.0, 'step': 1, 'jobName': 'nanoindentation', 'severe': 0, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0, 
+    'attempts': ' 5U', 'timeIncrement': 0.00390625, 'increment': 1, 
+    'stepTime': 0.0, 'step': 1, 'jobName': 'nanoindentation', 'severe': 0, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'Too many attempts made for this increment', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ABORTED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase failed due to errors', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ERROR, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(JOB_ABORTED, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation'})
+mdb.models['Model-1'].rootAssembly.translate(instanceList=('berkovich-1', ), 
+    vector=(0.0, 0.0, -0.1))
+del mdb.models['Model-1'].loads['Load-1']
+mdb.models['Model-1'].rootAssembly.Set(name='Set-6', referencePoints=(
+    mdb.models['Model-1'].rootAssembly.instances['berkovich-1'].referencePoints[4], 
+    ))
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-3', region=mdb.models['Model-1'].rootAssembly.sets['Set-6'], u1=UNSET, 
+    u2=UNSET, u3=0.2, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.jobs['nanoindentation'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\temp\\nanoindentation.odb', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 7764, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 2 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'nanoindentation', 'memory': 6554.0})
+mdb.jobs['nanoindentation']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 7592.0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(MINIMUM_MEMORY, {'minimum_memory': 864.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'nanoindentation', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation']._Message(END_STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(JOB_COMPLETED, {
+    'time': 'Wed Oct 21 21:06:13 2020', 'jobName': 'nanoindentation'})
+mdb.models['Model-1'].boundaryConditions['BC-3'].setValues(u3=1.0)
+mdb.models['Model-1'].steps['Step-1'].setValues(initialInc=0.1, maxInc=0.1)
+mdb.jobs['nanoindentation'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\temp\\nanoindentation.odb', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 16232, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 2 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'nanoindentation', 'memory': 6554.0})
+mdb.jobs['nanoindentation']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 7592.0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(MINIMUM_MEMORY, {'minimum_memory': 864.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.1, 'attempts': 1, 
+    'timeIncrement': 0.1, 'increment': 1, 'stepTime': 0.1, 'step': 1, 
+    'jobName': 'nanoindentation', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 2, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.2, 'attempts': 1, 
+    'timeIncrement': 0.1, 'increment': 2, 'stepTime': 0.2, 'step': 1, 
+    'jobName': 'nanoindentation', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 3, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.3, 'attempts': 1, 
+    'timeIncrement': 0.1, 'increment': 3, 'stepTime': 0.3, 'step': 1, 
+    'jobName': 'nanoindentation', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'Process terminated by external request (SIGTERM or SIGINT received).', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(INTERRUPTED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis interrupted by external signal', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ERROR, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(JOB_ABORTED, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation'].setValues(nodalOutputPrecision=FULL)
+mdb.models['Model-1'].ExplicitDynamicsStep(improvedDtMethod=ON, 
+    maintainAttributes=True, name='Step-1', previous='Initial')
+mdb.models['Model-1'].materials['Material-1'].Density(table=((2.6e-06, ), ))
+del mdb.models['Model-1'].interactions['Int-1']
+mdb.models['Model-1'].ContactExp(createStepName='Step-1', name='Int-1')
+mdb.models['Model-1'].interactions['Int-1'].includedPairs.setValuesInStep(
+    stepName='Step-1', useAllstar=ON)
+mdb.models['Model-1'].interactions['Int-1'].contactPropertyAssignments.appendInStep(
+    assignments=((GLOBAL, SELF, 'IntProp-1'), ), stepName='Step-1')
+mdb.models['Model-1'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1'].parts['Part-2'].cells.getSequenceFromMask(('[#1 ]', 
+    ), ))
+mdb.models['Model-1'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1'].parts['Part-2'].edges.getSequenceFromMask(('[#1 ]', 
+    ), ), minSizeFactor=0.1, size=5.0)
+mdb.models['Model-1'].parts['Part-2'].generateMesh()
+mdb.models['Model-1'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1'].parts['Part-2'].cells.getSequenceFromMask(('[#1 ]', 
+    ), ))
+mdb.models['Model-1'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1'].parts['Part-2'].edges.getSequenceFromMask(('[#3 ]', 
+    ), ), minSizeFactor=0.1, size=2.0)
+mdb.models['Model-1'].parts['Part-2'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['nanoindentation'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'THE OPTION *BOUNDARY,TYPE=DISPLACEMENT HAS BEEN USED; CHECK STATUS FILE BETWEEN STEPS FOR WARNINGS ON ANY JUMPS PRESCRIBED ACROSS THE STEPS IN DISPLACEMENT VALUES OF TRANSLATIONAL DOF. FOR ROTATIONAL DOF MAKE SURE THAT THERE ARE NO SUCH JUMPS. ALL JUMPS IN DISPLACEMENTS ACROSS STEPS ARE IGNORED', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': PACKAGER_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 8388, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': PACKAGER_PHASE, 
+    'message': 'There are 1 warning messages in the data (.dat) file.  Please check the data file for possible errors in the input file.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': PACKAGER_PHASE, 
+    'message': 'Phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': EXPLICIT_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 9744, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0, 
+    'stableTimeIncrement': 1.9325741504872e-06, 'stepTime': 0.0, 
+    'totalEnergy': 0.0, 'cpuTime': 0.100000001490116, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 0, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': EXPLICIT_PHASE, 
+    'message': 'The option *BOUNDARY,TYPE=DISPLACEMENT has been used with a jump in displacements at the nodes in node set WarnNodeDispBCJump-Step1 at the beginning of the next step; all jumps in displacement across steps are ignored. See the status file for further details.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0351684242486954, 
+    'stableTimeIncrement': 2.62754815594235e-06, 
+    'stepTime': 0.0351684242486954, 'totalEnergy': 0.0, 'cpuTime': 120.0, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 13386, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.050001934170723, 
+    'stableTimeIncrement': 2.62754815594235e-06, 'stepTime': 0.050001934170723, 
+    'totalEnergy': 0.0, 'cpuTime': 171.100006103516, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 19034, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0850822925567627, 
+    'stableTimeIncrement': 2.62754815594235e-06, 
+    'stepTime': 0.0850822925567627, 'totalEnergy': 0.0, 
+    'cpuTime': 291.100006103516, 'jobName': 'nanoindentation', 'step': 1, 
+    'increment': 32379, 'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.100002594292164, 
+    'stableTimeIncrement': 2.62754815594235e-06, 'stepTime': 0.100002594292164, 
+    'totalEnergy': 0.0, 'cpuTime': 342.200012207031, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 38052, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 2, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.135171726346016, 
+    'stableTimeIncrement': 2.62754815594235e-06, 'stepTime': 0.135171726346016, 
+    'totalEnergy': 0.0, 'cpuTime': 462.200012207031, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 51435, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.150002554059029, 
+    'stableTimeIncrement': 2.62754815594235e-06, 'stepTime': 0.150002554059029, 
+    'totalEnergy': 0.0, 'cpuTime': 513.0, 'jobName': 'nanoindentation', 
+    'step': 1, 'increment': 57090, 'phase': EXPLICIT_PHASE, 
+    'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 3, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.184967115521431, 
+    'stableTimeIncrement': 2.62754815594235e-06, 'stepTime': 0.184967115521431, 
+    'totalEnergy': 0.0, 'cpuTime': 633.0, 'jobName': 'nanoindentation', 
+    'step': 1, 'increment': 70422, 'phase': EXPLICIT_PHASE, 
+    'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.200002506375313, 
+    'stableTimeIncrement': 2.62754815594235e-06, 'stepTime': 0.200002506375313, 
+    'totalEnergy': 0.0, 'cpuTime': 684.400024414063, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 76155, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 4, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.234277322888374, 
+    'stableTimeIncrement': 2.62754815594235e-06, 'stepTime': 0.234277322888374, 
+    'totalEnergy': 0.0, 'cpuTime': 804.400024414063, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 89224, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.0})
+mdb.models['Model-1'].TabularAmplitude(data=((0.0, 0.0), (1.0, 1.0)), name=
+    'Amp-1', smooth=SOLVER_DEFAULT, timeSpan=STEP)
+mdb.models['Model-1'].boundaryConditions['BC-3'].setValues(amplitude='Amp-1', 
+    u3=2.0)
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.250002473592758, 
+    'stableTimeIncrement': 2.62754815594235e-06, 'stepTime': 0.250002473592758, 
+    'totalEnergy': 0.0, 'cpuTime': 859.0, 'jobName': 'nanoindentation', 
+    'step': 1, 'increment': 95220, 'phase': EXPLICIT_PHASE, 
+    'kineticEnergy': 0.0})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 5, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ERROR, {'phase': EXPLICIT_PHASE, 
+    'message': 'Process terminated by external request (SIGTERM or SIGINT received).', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(INTERRUPTED, {'phase': EXPLICIT_PHASE, 
+    'message': 'Analysis terminated by external signal', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ERROR, {
+    'message': 'Abaqus/Explicit Analysis exited with an error - Please see the  status file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(JOB_ABORTED, {
+    'message': 'Abaqus/Explicit Analysis exited with an error - Please see the  status file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation'})
+mdb.models['Model-1'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1'].parts['Part-2'].cells.getSequenceFromMask(('[#1 ]', 
+    ), ))
+mdb.models['Model-1'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1'].parts['Part-2'].edges.getSequenceFromMask(('[#1 ]', 
+    ), ), minSizeFactor=0.1, size=4.0)
+mdb.models['Model-1'].parts['Part-2'].generateMesh()
+mdb.models['Model-1'].parts['Part-2'].deleteMesh()
+mdb.models['Model-1'].parts['Part-2'].deleteSeeds(regions=
+    mdb.models['Model-1'].parts['Part-2'].edges.getSequenceFromMask(('[#3 ]', 
+    ), ))
+mdb.models['Model-1'].parts['Part-2'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=5.0)
+mdb.models['Model-1'].parts['Part-2'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['nanoindentation'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'THE OPTION *BOUNDARY,TYPE=DISPLACEMENT HAS BEEN USED; CHECK STATUS FILE BETWEEN STEPS FOR WARNINGS ON ANY JUMPS PRESCRIBED ACROSS THE STEPS IN DISPLACEMENT VALUES OF TRANSLATIONAL DOF. FOR ROTATIONAL DOF MAKE SURE THAT THERE ARE NO SUCH JUMPS. ALL JUMPS IN DISPLACEMENTS ACROSS STEPS ARE IGNORED', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': PACKAGER_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 13880, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': PACKAGER_PHASE, 
+    'message': 'There are 1 warning messages in the data (.dat) file.  Please check the data file for possible errors in the input file.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': PACKAGER_PHASE, 
+    'message': 'Phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': EXPLICIT_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 2412, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0, 
+    'stableTimeIncrement': 5.38645099368296e-06, 'stepTime': 0.0, 
+    'totalEnergy': 0.00444454979151487, 'cpuTime': 0.0, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 0, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.00444454979151487})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0500034727156162, 
+    'stableTimeIncrement': 8.95340508577647e-06, 
+    'stepTime': 0.0500034727156162, 'totalEnergy': 0.00444454979151487, 
+    'cpuTime': 2.20000004768372, 'jobName': 'nanoindentation', 'step': 1, 
+    'increment': 5591, 'phase': EXPLICIT_PHASE, 
+    'kineticEnergy': 0.00444454979151487})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.100003451108932, 
+    'stableTimeIncrement': 8.66021673573414e-06, 'stepTime': 0.100003451108932, 
+    'totalEnergy': 0.00428048707544804, 'cpuTime': 4.69999980926514, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 11355, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.00586712127551436})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 2, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.150002628564835, 
+    'stableTimeIncrement': 8.6917461885605e-06, 'stepTime': 0.150002628564835, 
+    'totalEnergy': 0.0211641956120729, 'cpuTime': 7.40000009536743, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 17118, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.00539949210360646})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 3, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.200005695223808, 
+    'stableTimeIncrement': 8.7214984887396e-06, 'stepTime': 0.200005695223808, 
+    'totalEnergy': 0.0141403181478381, 'cpuTime': 10.0, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 22861, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.00543119851499796})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 4, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.250001311302185, 
+    'stableTimeIncrement': 8.74318266141927e-06, 'stepTime': 0.250001311302185, 
+    'totalEnergy': 0.287655562162399, 'cpuTime': 12.6000003814697, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 28586, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.238310843706131})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 5, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.300005346536636, 
+    'stableTimeIncrement': 8.76213107403601e-06, 'stepTime': 0.300005346536636, 
+    'totalEnergy': 5.37215900421143, 'cpuTime': 15.1000003814697, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 34297, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 6.96501779556274})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 6, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.350007563829422, 
+    'stableTimeIncrement': 8.78647097124485e-06, 'stepTime': 0.350007563829422, 
+    'totalEnergy': 9.71548652648926, 'cpuTime': 17.6000003814697, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 39997, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 2.84758615493774})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 7, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.400005996227264, 
+    'stableTimeIncrement': 8.79852177604334e-06, 'stepTime': 0.400005996227264, 
+    'totalEnergy': 57.1875190734863, 'cpuTime': 20.2000007629395, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 45684, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 188.750823974609})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 8, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.450004369020462, 
+    'stableTimeIncrement': 8.82025415194221e-06, 'stepTime': 0.450004369020462, 
+    'totalEnergy': 172.834075927734, 'cpuTime': 22.7000007629395, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 51361, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 120.226264953613})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 9, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.500008046627045, 
+    'stableTimeIncrement': 8.84077417140361e-06, 'stepTime': 0.500008046627045, 
+    'totalEnergy': 212.714660644531, 'cpuTime': 25.3999996185303, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 57024, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 110.679710388184})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 10, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.550008237361908, 
+    'stableTimeIncrement': 8.84883411345072e-06, 'stepTime': 0.550008237361908, 
+    'totalEnergy': 225.610641479492, 'cpuTime': 28.0, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 62692, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 143.985626220703})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 11, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.600000321865082, 
+    'stableTimeIncrement': 8.85808003658894e-06, 'stepTime': 0.600000321865082, 
+    'totalEnergy': 281.350769042969, 'cpuTime': 30.6000003814697, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 68335, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 48.1664428710938})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 12, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.650004148483276, 
+    'stableTimeIncrement': 8.84873315953882e-06, 'stepTime': 0.650004148483276, 
+    'totalEnergy': 297.785583496094, 'cpuTime': 33.2000007629395, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 73974, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 27.3744087219238})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 13, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.700007379055023, 
+    'stableTimeIncrement': 8.83752181835007e-06, 'stepTime': 0.700007379055023, 
+    'totalEnergy': 168.714950561523, 'cpuTime': 36.0, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 79641, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 92.4758148193359})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 14, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.750007569789886, 
+    'stableTimeIncrement': 8.82049789652228e-06, 'stepTime': 0.750007569789886, 
+    'totalEnergy': 178.294204711914, 'cpuTime': 38.5999984741211, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 85309, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 24.6263942718506})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 15, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.80000776052475, 
+    'stableTimeIncrement': 8.80663174029905e-06, 'stepTime': 0.80000776052475, 
+    'totalEnergy': 181.843215942383, 'cpuTime': 41.4000015258789, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 90977, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 18.1339626312256})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 16, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.850005507469177, 
+    'stableTimeIncrement': 8.78532955539413e-06, 'stepTime': 0.850005507469177, 
+    'totalEnergy': 190.368804931641, 'cpuTime': 44.0999984741211, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 96655, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 3.67247462272644})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 17, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.900000810623169, 
+    'stableTimeIncrement': 8.76658486959059e-06, 'stepTime': 0.900000810623169, 
+    'totalEnergy': 225.650802612305, 'cpuTime': 46.9000015258789, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 102361, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 53.3688774108887})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 18, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.950004875659943, 
+    'stableTimeIncrement': 8.77369348017965e-06, 'stepTime': 0.950004875659943, 
+    'totalEnergy': 230.376739501953, 'cpuTime': 49.7000007629395, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 108068, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 20.6322708129883})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 19, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 1.0, 
+    'stableTimeIncrement': 8.76874128152849e-06, 'stepTime': 1.0, 
+    'totalEnergy': 240.284439086914, 'cpuTime': 52.5, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 113774, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 3.49227452278137})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 20, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': EXPLICIT_PHASE, 
+    'message': 'Phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(JOB_COMPLETED, {
+    'time': 'Wed Oct 21 21:49:52 2020', 'jobName': 'nanoindentation'})
+mdb.Model(name='Model-1-Standard', objectToCopy=mdb.models['Model-1'])
+mdb.models['Model-1-Standard'].StaticStep(initialInc=0.001, maintainAttributes=
+    True, maxInc=0.1, maxNumInc=10000, name='Step-1', nlgeom=ON, previous=
+    'Initial')
+del mdb.models['Model-1-Standard'].interactions['Int-1']
+mdb.models['Model-1-Standard'].SurfaceToSurfaceContactStd(adjustMethod=NONE, 
+    clearanceRegion=None, createStepName='Step-1', datumAxis=None, 
+    initialClearance=OMIT, interactionProperty='IntProp-1', master=
+    mdb.models['Model-1-Standard'].rootAssembly.surfaces['master'], name=
+    'Int-1', slave=
+    mdb.models['Model-1-Standard'].rootAssembly.surfaces['Slave'], sliding=
+    FINITE, thickness=ON)
+mdb.models['Model-1-Standard'].boundaryConditions['BC-3'].setValues(amplitude=
+    UNSET)
+mdb.jobs['nanoindentation'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'THE OPTION *BOUNDARY,TYPE=DISPLACEMENT HAS BEEN USED; CHECK STATUS FILE BETWEEN STEPS FOR WARNINGS ON ANY JUMPS PRESCRIBED ACROSS THE STEPS IN DISPLACEMENT VALUES OF TRANSLATIONAL DOF. FOR ROTATIONAL DOF MAKE SURE THAT THERE ARE NO SUCH JUMPS. ALL JUMPS IN DISPLACEMENTS ACROSS STEPS ARE IGNORED', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': PACKAGER_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 10904, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(WARNING, {'phase': PACKAGER_PHASE, 
+    'message': 'There are 1 warning messages in the data (.dat) file.  Please check the data file for possible errors in the input file.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(COMPLETED, {'phase': PACKAGER_PHASE, 
+    'message': 'Phase complete', 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STARTED, {'phase': EXPLICIT_PHASE, 
+    'clientHost': 'MD-054042', 'handle': 17080, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0, 
+    'stableTimeIncrement': 5.38645099368296e-06, 'stepTime': 0.0, 
+    'totalEnergy': 0.00444454979151487, 'cpuTime': 0.0, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 0, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.00444454979151487})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 0, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.0500034727156162, 
+    'stableTimeIncrement': 8.95340508577647e-06, 
+    'stepTime': 0.0500034727156162, 'totalEnergy': 0.00444454979151487, 
+    'cpuTime': 2.29999995231628, 'jobName': 'nanoindentation', 'step': 1, 
+    'increment': 5591, 'phase': EXPLICIT_PHASE, 
+    'kineticEnergy': 0.00444454979151487})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 1, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(STATUS, {'totalTime': 0.100003451108932, 
+    'stableTimeIncrement': 8.66021673573414e-06, 'stepTime': 0.100003451108932, 
+    'totalEnergy': 0.00428048707544804, 'cpuTime': 4.90000009536743, 
+    'jobName': 'nanoindentation', 'step': 1, 'increment': 11355, 
+    'phase': EXPLICIT_PHASE, 'kineticEnergy': 0.00586712127551436})
+mdb.jobs['nanoindentation']._Message(ODB_FRAME, {'phase': EXPLICIT_PHASE, 
+    'step': 0, 'frame': 2, 'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ERROR, {'phase': EXPLICIT_PHASE, 
+    'message': 'Process terminated by external request (SIGTERM or SIGINT received).', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(INTERRUPTED, {'phase': EXPLICIT_PHASE, 
+    'message': 'Analysis terminated by external signal', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(ERROR, {
+    'message': 'Abaqus/Explicit Analysis exited with an error - Please see the  status file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation'})
+mdb.jobs['nanoindentation']._Message(JOB_ABORTED, {
+    'message': 'Abaqus/Explicit Analysis exited with an error - Please see the  status file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation'})
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1-Standard', modelPrint=OFF
+    , multiprocessingMode=DEFAULT, name='nanoindentation_standard', 
+    nodalOutputPrecision=SINGLE, numCpus=1, numGPUs=0, queue=None, 
+    resultsFormat=ODB, scratch='', type=ANALYSIS, userSubroutine='', waitHours=
+    0, waitMinutes=0)
+mdb.jobs['nanoindentation_standard'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': BATCHPRE_PHASE, 'clientHost': 'MD-054042', 'handle': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FILE, {
+    'phase': BATCHPRE_PHASE, 'file': 'C:\\temp\\nanoindentation_standard.odb', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(COMPLETED, {
+    'phase': BATCHPRE_PHASE, 'message': 'Analysis phase complete', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': STANDARD_PHASE, 'clientHost': 'MD-054042', 'handle': 17004, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 2 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MEMORY_ESTIMATE, {
+    'phase': STANDARD_PHASE, 'jobName': 'nanoindentation_standard', 
+    'memory': 41.0})
+mdb.jobs['nanoindentation_standard']._Message(PHYSICAL_MEMORY, {
+    'phase': STANDARD_PHASE, 'physical_memory': 7592.0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MINIMUM_MEMORY, {
+    'minimum_memory': 20.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.001, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 1, 'stepTime': 0.001, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.002, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 2, 'stepTime': 0.002, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0035, 
+    'attempts': 1, 'timeIncrement': 0.0015, 'increment': 3, 'stepTime': 0.0035, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.00575, 
+    'attempts': 1, 'timeIncrement': 0.00225, 'increment': 4, 
+    'stepTime': 0.00575, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.009125, 
+    'attempts': 1, 'timeIncrement': 0.003375, 'increment': 5, 
+    'stepTime': 0.009125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0141875, 
+    'attempts': 1, 'timeIncrement': 0.0050625, 'increment': 6, 
+    'stepTime': 0.0141875, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.02178125, 
+    'attempts': 1, 'timeIncrement': 0.00759375, 'increment': 7, 
+    'stepTime': 0.02178125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.033171875, 'attempts': 1, 'timeIncrement': 0.011390625, 
+    'increment': 8, 'stepTime': 0.033171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 1, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.0502578125, 'attempts': 1, 'timeIncrement': 0.0170859375, 
+    'increment': 9, 'stepTime': 0.0502578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.07588671875, 'attempts': 1, 'timeIncrement': 0.02562890625, 
+    'increment': 10, 'stepTime': 0.07588671875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 2, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.114330078125, 'attempts': 1, 
+    'timeIncrement': 0.038443359375, 'increment': 11, 
+    'stepTime': 0.114330078125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 3, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.1719951171875, 'attempts': 1, 
+    'timeIncrement': 0.0576650390625, 'increment': 12, 
+    'stepTime': 0.1719951171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 4, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.25849267578125, 'attempts': 1, 
+    'timeIncrement': 0.08649755859375, 'increment': 13, 
+    'stepTime': 0.25849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 5, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.35849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 14, 'stepTime': 0.35849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 6, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.45849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 15, 'stepTime': 0.45849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 7, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.55849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 16, 'stepTime': 0.55849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 8, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.65849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 17, 'stepTime': 0.65849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 9, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.75849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 18, 'stepTime': 0.75849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 10, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.85849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 19, 'stepTime': 0.85849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 11, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.95849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 20, 'stepTime': 0.95849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 6})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 12, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 1.0, 
+    'attempts': 1, 'timeIncrement': 0.0415073242187501, 'increment': 21, 
+    'stepTime': 1.0, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 1, 'iterations': 7, 'phase': STANDARD_PHASE, 'equilibrium': 6})
+mdb.jobs['nanoindentation_standard']._Message(END_STEP, {
+    'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(COMPLETED, {
+    'phase': STANDARD_PHASE, 'message': 'Analysis phase complete', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(JOB_COMPLETED, {
+    'time': 'Thu Oct 22 10:45:28 2020', 'jobName': 'nanoindentation_standard'})
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#1 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].DatumPlaneByPrincipalPlane(
+    offset=0.0, principalPlane=YZPLANE)
+mdb.models['Model-1-Standard'].parts['Part-2'].DatumPlaneByPrincipalPlane(
+    offset=0.0, principalPlane=XZPLANE)
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellByDatumPlane(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#1 ]', ), ), datumPlane=
+    mdb.models['Model-1-Standard'].parts['Part-2'].datums[10])
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellByDatumPlane(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#3 ]', ), ), datumPlane=
+    mdb.models['Model-1-Standard'].parts['Part-2'].datums[9])
+mdb.models['Model-1-Standard'].ConstrainedSketch(gridSpacing=3.06, name=
+    '__profile__', sheetSize=122.47, transform=
+    mdb.models['Model-1-Standard'].parts['Part-2'].MakeSketchTransform(
+    sketchPlane=mdb.models['Model-1-Standard'].parts['Part-2'].faces[14], 
+    sketchPlaneSide=SIDE1, 
+    sketchUpEdge=mdb.models['Model-1-Standard'].parts['Part-2'].edges[17], 
+    sketchOrientation=RIGHT, origin=(-10.61033, 10.61033, 50.0)))
+mdb.models['Model-1-Standard'].parts['Part-2'].projectReferencesOntoSketch(
+    filter=COPLANAR_EDGES, sketch=
+    mdb.models['Model-1-Standard'].sketches['__profile__'])
+mdb.models['Model-1-Standard'].sketches['__profile__'].CircleByCenterPerimeter(
+    center=(10.61033, 10.61033), point1=(16.8306821728516, 10.61033))
+mdb.models['Model-1-Standard'].sketches['__profile__'].CoincidentConstraint(
+    addUndoState=False, entity1=
+    mdb.models['Model-1-Standard'].sketches['__profile__'].vertices[6], 
+    entity2=mdb.models['Model-1-Standard'].sketches['__profile__'].geometry[3])
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellBySketch(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#f ]', ), ), sketch=
+    mdb.models['Model-1-Standard'].sketches['__profile__'], sketchPlane=
+    mdb.models['Model-1-Standard'].parts['Part-2'].faces[14], sketchUpEdge=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[17])
+del mdb.models['Model-1-Standard'].sketches['__profile__']
+mdb.models['Model-1-Standard'].parts['Part-2'].DatumPlaneByPrincipalPlane(
+    offset=45.0, principalPlane=XYPLANE)
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellByDatumPlane(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#f ]', ), ), datumPlane=
+    mdb.models['Model-1-Standard'].parts['Part-2'].datums[14])
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellByExtendFace(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#b8 ]', ), ), extendFace=
+    mdb.models['Model-1-Standard'].parts['Part-2'].faces[12])
+#* Feature creation failed.
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellByExtendFace(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#8 ]', ), ), extendFace=
+    mdb.models['Model-1-Standard'].parts['Part-2'].faces[30])
+#* Feature creation failed.
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellBySweepEdge(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#80 ]', ), ), edges=(
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[16], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[27], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[28]), sweepPath=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[15])
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellByExtrudeEdge(
+    cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#40 ]', ), ), edges=(
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[27], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[39], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[40]), line=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[10], sense=REVERSE)
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellByExtrudeEdge(
+    cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#20 ]', ), ), edges=(
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[7], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[21], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[41]), line=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[8], sense=REVERSE)
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellByExtrudeEdge(
+    cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#80 ]', ), ), edges=(
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[34], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[37], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[46]), line=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[13], sense=REVERSE)
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#8424204 #90 ]', ), ), minSizeFactor=0.1, size=1.0)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#30a ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#202 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#400 ]', ), ), minSizeFactor=0.1, size=1.0)
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#100 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#8 ]', ), ), minSizeFactor=0.1, size=1.0)
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#8 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#2 ]', ), ), minSizeFactor=0.1, size=1.0)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#30a ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#20a ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#780 ]', ), ), minSizeFactor=0.1, size=1.0)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#82 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#204 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#808 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#1 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#40 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#470 ]', ), ))
+mdb.models['Model-1-Standard'].rootAssembly.regenerate()
+mdb.models['Model-1-Standard'].rootAssembly.Surface(name='Slave', side1Faces=
+    mdb.models['Model-1-Standard'].rootAssembly.instances['Part-2-1'].faces.getSequenceFromMask(
+    ('[#40000000 #888 ]', ), ))
+mdb.models['Model-1-Standard'].boundaryConditions['BC-1'].setValues(region=
+    Region(
+    faces=mdb.models['Model-1-Standard'].rootAssembly.instances['Part-2-1'].faces.getSequenceFromMask(
+    mask=('[#f000000 #445 ]', ), )))
+mdb.jobs['nanoindentation_standard'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': BATCHPRE_PHASE, 'clientHost': 'MD-054042', 'handle': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FILE, {
+    'phase': BATCHPRE_PHASE, 'file': 'C:\\temp\\nanoindentation_standard.odb', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(COMPLETED, {
+    'phase': BATCHPRE_PHASE, 'message': 'Analysis phase complete', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': STANDARD_PHASE, 'clientHost': 'MD-054042', 'handle': 17624, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'THERE ARE 2 UNCONNECTED REGIONS IN THE MODEL.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MEMORY_ESTIMATE, {
+    'phase': STANDARD_PHASE, 'jobName': 'nanoindentation_standard', 
+    'memory': 113.0})
+mdb.jobs['nanoindentation_standard']._Message(PHYSICAL_MEMORY, {
+    'phase': STANDARD_PHASE, 'physical_memory': 7592.0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MINIMUM_MEMORY, {
+    'minimum_memory': 25.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.001, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 1, 'stepTime': 0.001, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.002, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 2, 'stepTime': 0.002, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0035, 
+    'attempts': 1, 'timeIncrement': 0.0015, 'increment': 3, 'stepTime': 0.0035, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.00575, 
+    'attempts': 1, 'timeIncrement': 0.00225, 'increment': 4, 
+    'stepTime': 0.00575, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.009125, 
+    'attempts': 1, 'timeIncrement': 0.003375, 'increment': 5, 
+    'stepTime': 0.009125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0141875, 
+    'attempts': 1, 'timeIncrement': 0.0050625, 'increment': 6, 
+    'stepTime': 0.0141875, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.02178125, 
+    'attempts': 1, 'timeIncrement': 0.00759375, 'increment': 7, 
+    'stepTime': 0.02178125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.033171875, 'attempts': 1, 'timeIncrement': 0.011390625, 
+    'increment': 8, 'stepTime': 0.033171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 1, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.0502578125, 'attempts': 1, 'timeIncrement': 0.0170859375, 
+    'increment': 9, 'stepTime': 0.0502578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.07588671875, 'attempts': 1, 'timeIncrement': 0.02562890625, 
+    'increment': 10, 'stepTime': 0.07588671875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 2, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.114330078125, 'attempts': 1, 
+    'timeIncrement': 0.038443359375, 'increment': 11, 
+    'stepTime': 0.114330078125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 3, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.1719951171875, 'attempts': 1, 
+    'timeIncrement': 0.0576650390625, 'increment': 12, 
+    'stepTime': 0.1719951171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 4, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.25849267578125, 'attempts': 1, 
+    'timeIncrement': 0.08649755859375, 'increment': 13, 
+    'stepTime': 0.25849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 2, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 5, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.35849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 14, 'stepTime': 0.35849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 6, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.45849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 15, 'stepTime': 0.45849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 8, 
+    'phase': STANDARD_PHASE, 'equilibrium': 7})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.45849267578125, 'attempts': ' 1U', 'timeIncrement': 0.1, 
+    'increment': 16, 'stepTime': 0.45849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 9})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 7, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.50849267578125, 'attempts': 2, 'timeIncrement': 0.05, 
+    'increment': 16, 'stepTime': 0.50849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 10})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.50849267578125, 'attempts': ' 1U', 'timeIncrement': 0.05, 
+    'increment': 17, 'stepTime': 0.50849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 9})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'FORCE equilibrium accepted using the alternate tolerance.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.53349267578125, 'attempts': 2, 'timeIncrement': 0.025, 
+    'increment': 17, 'stepTime': 0.53349267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 11, 
+    'phase': STANDARD_PHASE, 'equilibrium': 10})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.53349267578125, 'attempts': ' 1U', 'timeIncrement': 0.025, 
+    'increment': 18, 'stepTime': 0.53349267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 9, 
+    'phase': STANDARD_PHASE, 'equilibrium': 9})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'FORCE equilibrium accepted using the alternate tolerance.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.54599267578125, 'attempts': 2, 'timeIncrement': 0.0125, 
+    'increment': 18, 'stepTime': 0.54599267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 10, 
+    'phase': STANDARD_PHASE, 'equilibrium': 10})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 8, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.55849267578125, 'attempts': 1, 'timeIncrement': 0.0125, 
+    'increment': 19, 'stepTime': 0.55849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.55849267578125, 'attempts': ' 1U', 'timeIncrement': 0.0125, 
+    'increment': 20, 'stepTime': 0.55849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.56161767578125, 'attempts': 2, 'timeIncrement': 0.003125, 
+    'increment': 20, 'stepTime': 0.56161767578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 6})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.56474267578125, 'attempts': 1, 'timeIncrement': 0.003125, 
+    'increment': 21, 'stepTime': 0.56474267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.56474267578125, 'attempts': ' 1U', 
+    'timeIncrement': 0.003125, 'increment': 22, 'stepTime': 0.56474267578125, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 16, 'phase': STANDARD_PHASE, 'equilibrium': 16})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.56474267578125, 'attempts': ' 2U', 
+    'timeIncrement': 0.00078125, 'increment': 22, 'stepTime': 0.56474267578125, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 16, 'phase': STANDARD_PHASE, 'equilibrium': 16})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.56474267578125, 'attempts': ' 3U', 
+    'timeIncrement': 0.0001953125, 'increment': 22, 
+    'stepTime': 0.56474267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 16, 
+    'phase': STANDARD_PHASE, 'equilibrium': 16})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.56474267578125, 'attempts': ' 4U', 
+    'timeIncrement': 4.8828125e-05, 'increment': 22, 
+    'stepTime': 0.56474267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 16, 
+    'phase': STANDARD_PHASE, 'equilibrium': 16})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.56474267578125, 'attempts': ' 5U', 
+    'timeIncrement': 1.220703125e-05, 'increment': 22, 
+    'stepTime': 0.56474267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 16, 
+    'phase': STANDARD_PHASE, 'equilibrium': 16})
+mdb.jobs['nanoindentation_standard']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'Too many attempts made for this increment', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 9, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'THE ANALYSIS HAS BEEN TERMINATED DUE TO PREVIOUS ERRORS. ALL OUTPUT REQUESTS HAVE BEEN WRITTEN FOR THE LAST CONVERGED INCREMENT.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ABORTED, {
+    'phase': STANDARD_PHASE, 'message': 'Analysis phase failed due to errors', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ERROR, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(JOB_ABORTED, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.models['Model-1-Standard'].materials['Material-1'].Plastic(table=((500.0, 
+    0.0), (1200.0, 0.35)))
+mdb.models['Model-1-Standard'].rootAssembly.translate(instanceList=(
+    'berkovich-1', ), vector=(0.0, 0.0, 0.1))
+mdb.models['Model-1-Standard'].boundaryConditions['BC-3'].setValues(u3=0.0002)
+mdb.models['Model-1-Standard'].TabularAmplitude(data=((0.0, 0.0), (1.0, 1.0), (
+    1.5, 0.0)), name='Amp-2', smooth=SOLVER_DEFAULT, timeSpan=STEP)
+mdb.models['Model-1-Standard'].boundaryConditions['BC-3'].setValues(amplitude=
+    'Amp-2')
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1-Standard'].steps['Step-1'].setValues(minInc=1.5e-05, 
+    timePeriod=1.5)
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh()
+mdb.models['Model-1-Standard'].parts['Part-2'].regenerate()
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#202081 ]', ), ), minSizeFactor=0.1, size=0.4)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh()
+mdb.models['Model-1-Standard'].rootAssembly.regenerate()
+mdb.jobs['nanoindentation_standard'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': BATCHPRE_PHASE, 'clientHost': 'MD-054042', 'handle': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': BATCHPRE_PHASE, 
+    'message': '50 elements are distorted. Either the isoparametric angles are out of the suggested limits or the triangular or tetrahedral quality measure is bad. The elements have been identified in element set WarnElemDistorted.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': BATCHPRE_PHASE, 
+    'message': 'OVERCONSTRAINT CHECKS: THERE ARE 10797 BOUNDARY CONDITIONS SPECIFIED IN THIS MODEL. OVERCONSTRAINT CHECKS FOR BOUNDARY CONDITIONS SPECIFIED ON SLAVE NODES OF RIGID BODIES, OF *TIE OPTIONS, OR OF *COUPLING OPTIONS REQUIRE 4 Mb OF MEMORY. IF THIS IS A PROBLEM, PLEASE TURN OFF OVERCONSTRAINT CHECKS USING *CONSTRAINT CONTROLS, NO CHECKS or INCREASE THE MEMORY USED BY THE PRE-PROCESSOR.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FILE, {
+    'phase': BATCHPRE_PHASE, 'file': 'C:\\temp\\nanoindentation_standard.odb', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(COMPLETED, {
+    'phase': BATCHPRE_PHASE, 'message': 'Analysis phase complete', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': STANDARD_PHASE, 'clientHost': 'MD-054042', 'handle': 10036, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MEMORY_ESTIMATE, {
+    'phase': STANDARD_PHASE, 'jobName': 'nanoindentation_standard', 
+    'memory': 1835.0})
+mdb.jobs['nanoindentation_standard']._Message(PHYSICAL_MEMORY, {
+    'phase': STANDARD_PHASE, 'physical_memory': 7592.0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MINIMUM_MEMORY, {
+    'minimum_memory': 257.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.001, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 1, 'stepTime': 0.001, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.002, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 2, 'stepTime': 0.002, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0035, 
+    'attempts': 1, 'timeIncrement': 0.0015, 'increment': 3, 'stepTime': 0.0035, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.00575, 
+    'attempts': 1, 'timeIncrement': 0.00225, 'increment': 4, 
+    'stepTime': 0.00575, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.009125, 
+    'attempts': 1, 'timeIncrement': 0.003375, 'increment': 5, 
+    'stepTime': 0.009125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0141875, 
+    'attempts': 1, 'timeIncrement': 0.0050625, 'increment': 6, 
+    'stepTime': 0.0141875, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.02178125, 
+    'attempts': 1, 'timeIncrement': 0.00759375, 'increment': 7, 
+    'stepTime': 0.02178125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.033171875, 'attempts': 1, 'timeIncrement': 0.011390625, 
+    'increment': 8, 'stepTime': 0.033171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.0502578125, 'attempts': 1, 'timeIncrement': 0.0170859375, 
+    'increment': 9, 'stepTime': 0.0502578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 1, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.07588671875, 'attempts': 1, 'timeIncrement': 0.02562890625, 
+    'increment': 10, 'stepTime': 0.07588671875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.114330078125, 'attempts': 1, 
+    'timeIncrement': 0.038443359375, 'increment': 11, 
+    'stepTime': 0.114330078125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 2, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.1719951171875, 'attempts': 1, 
+    'timeIncrement': 0.0576650390625, 'increment': 12, 
+    'stepTime': 0.1719951171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 3, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.25849267578125, 'attempts': 1, 
+    'timeIncrement': 0.08649755859375, 'increment': 13, 
+    'stepTime': 0.25849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 4, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.35849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 14, 'stepTime': 0.35849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 5, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.45849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 15, 'stepTime': 0.45849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 6, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.55849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 16, 'stepTime': 0.55849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 7, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.65849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 17, 'stepTime': 0.65849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 8, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.75849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 18, 'stepTime': 0.75849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 9, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.85849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 19, 'stepTime': 0.85849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 10, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.95849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 20, 'stepTime': 0.95849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 11, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.05849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 21, 'stepTime': 1.05849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 12, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.15849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 22, 'stepTime': 1.15849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 13, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.25849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 23, 'stepTime': 1.25849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 14, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.35849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 24, 'stepTime': 1.35849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 15, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.45849267578125, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 25, 'stepTime': 1.45849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'There is zero FORCE everywhere in the model based on the default criterion. please check the value of the average FORCE during the current iteration to verify that the FORCE is small enough to be treated as zero. if not, please use the solution controls to reset the criterion for zero FORCE.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 16, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 1.5, 
+    'attempts': 1, 'timeIncrement': 0.0415073242187498, 'increment': 26, 
+    'stepTime': 1.5, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(END_STEP, {
+    'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(COMPLETED, {
+    'phase': STANDARD_PHASE, 'message': 'Analysis phase complete', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(JOB_COMPLETED, {
+    'time': 'Thu Oct 22 15:27:36 2020', 'jobName': 'nanoindentation_standard'})
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#470 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#0 #400000 ]', ), ), minSizeFactor=0.1, size=2.0)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh()
+mdb.models['Model-1-Standard'].parts['Part-2'].features['Datum plane-3'].setValues(
+    offset=5.0)
+mdb.models['Model-1-Standard'].parts['Part-2'].regenerate()
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh()
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#5 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#100000 ]', ), ), minSizeFactor=0.1, size=5.0)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh()
+mdb.models['Model-1-Standard'].ConstrainedSketch(name='__edit__', objectToCopy=
+    mdb.models['Model-1-Standard'].parts['Part-2'].features['Solid extrude-1'].sketch)
+mdb.models['Model-1-Standard'].parts['Part-2'].projectReferencesOntoSketch(
+    filter=COPLANAR_EDGES, sketch=
+    mdb.models['Model-1-Standard'].sketches['__edit__'], upToFeature=
+    mdb.models['Model-1-Standard'].parts['Part-2'].features['Solid extrude-1'])
+del mdb.models['Model-1-Standard'].sketches['__edit__']
+mdb.models['Model-1-Standard'].ConstrainedSketch(name='__edit__', objectToCopy=
+    mdb.models['Model-1-Standard'].parts['Part-2'].features['Partition cell-3'].sketch)
+mdb.models['Model-1-Standard'].parts['Part-2'].projectReferencesOntoSketch(
+    filter=COPLANAR_EDGES, sketch=
+    mdb.models['Model-1-Standard'].sketches['__edit__'], upToFeature=
+    mdb.models['Model-1-Standard'].parts['Part-2'].features['Partition cell-3'])
+mdb.models['Model-1-Standard'].sketches['__edit__'].RadialDimension(curve=
+    mdb.models['Model-1-Standard'].sketches['__edit__'].geometry[15], radius=
+    2.0, textPoint=(0.773994817810058, 15.0764736080933))
+mdb.models['Model-1-Standard'].parts['Part-2'].features['Partition cell-3'].setValues(
+    sketch=mdb.models['Model-1-Standard'].sketches['__edit__'])
+del mdb.models['Model-1-Standard'].sketches['__edit__']
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh()
+mdb.models['Model-1-Standard'].parts['Part-2'].regenerate()
+mdb.models['Model-1-Standard'].ConstrainedSketch(name='__edit__', objectToCopy=
+    mdb.models['Model-1-Standard'].parts['Part-2'].features['Partition cell-3'].sketch)
+mdb.models['Model-1-Standard'].parts['Part-2'].projectReferencesOntoSketch(
+    filter=COPLANAR_EDGES, sketch=
+    mdb.models['Model-1-Standard'].sketches['__edit__'], upToFeature=
+    mdb.models['Model-1-Standard'].parts['Part-2'].features['Partition cell-3'])
+del mdb.models['Model-1-Standard'].sketches['__edit__']
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteFeatures((
+    'Partition cell-3', 'Partition cell-8', 'Partition cell-7', 
+    'Partition cell-6', 'Partition cell-5'))
+mdb.models['Model-1-Standard'].ConstrainedSketch(gridSpacing=1.76, name=
+    '__profile__', sheetSize=70.71, transform=
+    mdb.models['Model-1-Standard'].parts['Part-2'].MakeSketchTransform(
+    sketchPlane=mdb.models['Model-1-Standard'].parts['Part-2'].faces[27], 
+    sketchPlaneSide=SIDE1, 
+    sketchUpEdge=mdb.models['Model-1-Standard'].parts['Part-2'].edges[21], 
+    sketchOrientation=RIGHT, origin=(-10.61033, -10.61033, 0.0)))
+mdb.models['Model-1-Standard'].parts['Part-2'].projectReferencesOntoSketch(
+    filter=COPLANAR_EDGES, sketch=
+    mdb.models['Model-1-Standard'].sketches['__profile__'])
+mdb.models['Model-1-Standard'].sketches['__profile__'].CircleByCenterPerimeter(
+    center=(10.61033, 10.61033), point1=(2.0, 0.0))
+mdb.models['Model-1-Standard'].sketches['__profile__'].RadialDimension(curve=
+    mdb.models['Model-1-Standard'].sketches['__profile__'].geometry[15], 
+    radius=2.0, textPoint=(-7.35584889404297, 18.4306405926514))
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellBySketch(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#47 ]', ), ), sketch=
+    mdb.models['Model-1-Standard'].sketches['__profile__'], sketchPlane=
+    mdb.models['Model-1-Standard'].parts['Part-2'].faces[27], sketchUpEdge=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[21])
+del mdb.models['Model-1-Standard'].sketches['__profile__']
+mdb.models['Model-1-Standard'].parts['Part-2'].PartitionCellBySweepEdge(cells=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#47 ]', ), ), edges=(
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[0], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[1], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[4], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[9], 
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[11]), sweepPath=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges[33])
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#31001c38 #1 ]', ), ), minSizeFactor=0.1, size=0.1)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh()
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#40 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].setMeshControls(algorithm=
+    ADVANCING_FRONT, regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ), technique=SWEEP)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].setMeshControls(algorithm=
+    MEDIAL_AXIS, regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh()
+mdb.models['Model-1-Standard'].parts['Part-2'].setMeshControls(minTransition=
+    OFF, regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#3090 ]', ), ), minSizeFactor=0.1, size=0.1)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].setMeshControls(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ), technique=BOTTOM_UP)
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#33863fff #9 ]', ), ), minSizeFactor=0.1, size=0.1)
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#33863fff #9 ]', ), ), minSizeFactor=0.1, size=0.3)
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].setMeshControls(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ), technique=STRUCTURED)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#33863fff #9 ]', ), ), minSizeFactor=0.1, size=0.2)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].deleteMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].seedEdgeBySize(constraint=FINER, 
+    deviationFactor=0.1, edges=
+    mdb.models['Model-1-Standard'].parts['Part-2'].edges.getSequenceFromMask((
+    '[#33863fff #9 ]', ), ), minSizeFactor=0.1, size=0.1)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#78 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#87 ]', ), ))
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#ff ]', ), ), seedConstraintOverride=ON)
+mdb.models['Model-1-Standard'].parts['Part-2'].generateMesh(regions=
+    mdb.models['Model-1-Standard'].parts['Part-2'].cells.getSequenceFromMask((
+    '[#f00 ]', ), ))
+mdb.models['Model-1-Standard'].rootAssembly.regenerate()
+mdb.models['Model-1-Standard'].boundaryConditions['BC-1'].setValues(region=
+    Region(
+    faces=mdb.models['Model-1-Standard'].rootAssembly.instances['Part-2-1'].faces.getSequenceFromMask(
+    mask=('[#0 #445 ]', ), )))
+mdb.models['Model-1-Standard'].rootAssembly.Surface(name='Slave', side1Faces=
+    mdb.models['Model-1-Standard'].rootAssembly.instances['Part-2-1'].faces.getSequenceFromMask(
+    ('[#4000f000 #888 ]', ), ))
+mdb.models['Model-1-Standard'].rootAssembly.Surface(name='master', side1Faces=
+    mdb.models['Model-1-Standard'].rootAssembly.instances['berkovich-1'].faces.getSequenceFromMask(
+    ('[#e0 ]', ), ))
+mdb.jobs['nanoindentation_standard'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': BATCHPRE_PHASE, 'clientHost': 'MD-054042', 'handle': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': BATCHPRE_PHASE, 
+    'message': '1511 elements are distorted. Either the isoparametric angles are out of the suggested limits or the triangular or tetrahedral quality measure is bad. The elements have been identified in element set WarnElemDistorted.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': BATCHPRE_PHASE, 
+    'message': 'The aspect ratio for 90 elements exceeds 100 to 1. The elements have been identified in element set WarnElemAspectRatio.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FILE, {
+    'phase': BATCHPRE_PHASE, 'file': 'C:\\temp\\nanoindentation_standard.odb', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(COMPLETED, {
+    'phase': BATCHPRE_PHASE, 'message': 'Analysis phase complete', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': STANDARD_PHASE, 'clientHost': 'MD-054042', 'handle': 14356, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MEMORY_ESTIMATE, {
+    'phase': STANDARD_PHASE, 'jobName': 'nanoindentation_standard', 
+    'memory': 6717.0})
+mdb.jobs['nanoindentation_standard']._Message(PHYSICAL_MEMORY, {
+    'phase': STANDARD_PHASE, 'physical_memory': 7592.0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MINIMUM_MEMORY, {
+    'minimum_memory': 837.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.001, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 1, 'stepTime': 0.001, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.002, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 2, 'stepTime': 0.002, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0035, 
+    'attempts': 1, 'timeIncrement': 0.0015, 'increment': 3, 'stepTime': 0.0035, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.00575, 
+    'attempts': 1, 'timeIncrement': 0.00225, 'increment': 4, 
+    'stepTime': 0.00575, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.009125, 
+    'attempts': 1, 'timeIncrement': 0.003375, 'increment': 5, 
+    'stepTime': 0.009125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0141875, 
+    'attempts': 1, 'timeIncrement': 0.0050625, 'increment': 6, 
+    'stepTime': 0.0141875, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.02178125, 
+    'attempts': 1, 'timeIncrement': 0.00759375, 'increment': 7, 
+    'stepTime': 0.02178125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.033171875, 'attempts': 1, 'timeIncrement': 0.011390625, 
+    'increment': 8, 'stepTime': 0.033171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.0502578125, 'attempts': 1, 'timeIncrement': 0.0170859375, 
+    'increment': 9, 'stepTime': 0.0502578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.models['Model-1-Standard'].materials['Material-1'].elastic.setValues(table=
+    ((103000.0, 0.3), ))
+del mdb.models['Model-1-Standard'].materials['Material-1'].density
+mdb.models['Model-1-Standard'].materials['Material-1'].elastic.setValues(table=
+    ((124.6, 0.3), ))
+mdb.jobs['nanoindentation_standard']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'Process terminated by external request (SIGTERM or SIGINT received).', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(INTERRUPTED, {
+    'phase': STANDARD_PHASE, 
+    'message': 'Analysis interrupted by external signal', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ERROR, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(JOB_ABORTED, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.models['Model-1-Standard'].materials['Material-1'].elastic.setValues(table=
+    ((0.1138, 0.3), ))
+mdb.models['Model-1-Standard'].materials['Material-1'].plastic.setValues(table=
+    ((0.0005, 0.0), (0.0012, 0.35)))
+mdb.models['Model-1-Standard'].boundaryConditions['BC-3'].setValues(u3=0.2)
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.jobs['nanoindentation_standard'].submit(consistencyChecking=OFF)
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': BATCHPRE_PHASE, 'clientHost': 'MD-054042', 'handle': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': BATCHPRE_PHASE, 
+    'message': '1511 elements are distorted. Either the isoparametric angles are out of the suggested limits or the triangular or tetrahedral quality measure is bad. The elements have been identified in element set WarnElemDistorted.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': BATCHPRE_PHASE, 
+    'message': 'The aspect ratio for 90 elements exceeds 100 to 1. The elements have been identified in element set WarnElemAspectRatio.', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FILE, {
+    'phase': BATCHPRE_PHASE, 'file': 'C:\\temp\\nanoindentation_standard.odb', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(COMPLETED, {
+    'phase': BATCHPRE_PHASE, 'message': 'Analysis phase complete', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STARTED, {
+    'phase': STANDARD_PHASE, 'clientHost': 'MD-054042', 'handle': 10048, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MEMORY_ESTIMATE, {
+    'phase': STANDARD_PHASE, 'jobName': 'nanoindentation_standard', 
+    'memory': 6717.0})
+mdb.jobs['nanoindentation_standard']._Message(PHYSICAL_MEMORY, {
+    'phase': STANDARD_PHASE, 'physical_memory': 7592.0, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(MINIMUM_MEMORY, {
+    'minimum_memory': 837.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.001, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 1, 'stepTime': 0.001, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.002, 
+    'attempts': 1, 'timeIncrement': 0.001, 'increment': 2, 'stepTime': 0.002, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0035, 
+    'attempts': 1, 'timeIncrement': 0.0015, 'increment': 3, 'stepTime': 0.0035, 
+    'step': 1, 'jobName': 'nanoindentation_standard', 'severe': 0, 
+    'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.00575, 
+    'attempts': 1, 'timeIncrement': 0.00225, 'increment': 4, 
+    'stepTime': 0.00575, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.009125, 
+    'attempts': 1, 'timeIncrement': 0.003375, 'increment': 5, 
+    'stepTime': 0.009125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.0141875, 
+    'attempts': 1, 'timeIncrement': 0.0050625, 'increment': 6, 
+    'stepTime': 0.0141875, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 0.02178125, 
+    'attempts': 1, 'timeIncrement': 0.00759375, 'increment': 7, 
+    'stepTime': 0.02178125, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.033171875, 'attempts': 1, 'timeIncrement': 0.011390625, 
+    'increment': 8, 'stepTime': 0.033171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.0502578125, 'attempts': 1, 'timeIncrement': 0.0170859375, 
+    'increment': 9, 'stepTime': 0.0502578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 1, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.07588671875, 'attempts': 1, 'timeIncrement': 0.02562890625, 
+    'increment': 10, 'stepTime': 0.07588671875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 2, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.114330078125, 'attempts': 1, 
+    'timeIncrement': 0.038443359375, 'increment': 11, 
+    'stepTime': 0.114330078125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 2, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.1719951171875, 'attempts': 1, 
+    'timeIncrement': 0.0576650390625, 'increment': 12, 
+    'stepTime': 0.1719951171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 3, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.25849267578125, 'attempts': 1, 
+    'timeIncrement': 0.08649755859375, 'increment': 13, 
+    'stepTime': 0.25849267578125, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 4, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.344990234375, 'attempts': 1, 
+    'timeIncrement': 0.08649755859375, 'increment': 14, 
+    'stepTime': 0.344990234375, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 5, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.43148779296875, 'attempts': 1, 
+    'timeIncrement': 0.08649755859375, 'increment': 15, 
+    'stepTime': 0.43148779296875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.43148779296875, 'attempts': ' 1U', 'timeIncrement': 0.1, 
+    'increment': 16, 'stepTime': 0.43148779296875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.43148779296875, 'attempts': ' 2U', 'timeIncrement': 0.025, 
+    'increment': 16, 'stepTime': 0.43148779296875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.43773779296875, 'attempts': 3, 'timeIncrement': 0.00625, 
+    'increment': 16, 'stepTime': 0.43773779296875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.44711279296875, 'attempts': 1, 'timeIncrement': 0.009375, 
+    'increment': 17, 'stepTime': 0.44711279296875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 2, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 6, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.46117529296875, 'attempts': 1, 'timeIncrement': 0.0140625, 
+    'increment': 18, 'stepTime': 0.46117529296875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 2, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.48226904296875, 'attempts': 1, 'timeIncrement': 0.02109375, 
+    'increment': 19, 'stepTime': 0.48226904296875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 4, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.51390966796875, 'attempts': 1, 'timeIncrement': 0.031640625, 
+    'increment': 20, 'stepTime': 0.51390966796875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 7, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.56137060546875, 'attempts': 1, 
+    'timeIncrement': 0.0474609375, 'increment': 21, 
+    'stepTime': 0.56137060546875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 8, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.63256201171875, 'attempts': 1, 
+    'timeIncrement': 0.07119140625, 'increment': 22, 
+    'stepTime': 0.63256201171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 9, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.73256201171875, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 23, 'stepTime': 0.73256201171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 8, 
+    'phase': STANDARD_PHASE, 'equilibrium': 7})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.73256201171875, 'attempts': ' 1U', 'timeIncrement': 0.1, 
+    'increment': 24, 'stepTime': 0.73256201171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.73256201171875, 'attempts': ' 2U', 'timeIncrement': 0.025, 
+    'increment': 24, 'stepTime': 0.73256201171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.73881201171875, 'attempts': 3, 'timeIncrement': 0.00625, 
+    'increment': 24, 'stepTime': 0.73881201171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.74506201171875, 'attempts': 1, 'timeIncrement': 0.00625, 
+    'increment': 25, 'stepTime': 0.74506201171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 10, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.75131201171875, 'attempts': 1, 'timeIncrement': 0.00625, 
+    'increment': 26, 'stepTime': 0.75131201171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.76068701171875, 'attempts': 1, 'timeIncrement': 0.009375, 
+    'increment': 27, 'stepTime': 0.76068701171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.77474951171875, 'attempts': 1, 'timeIncrement': 0.0140625, 
+    'increment': 28, 'stepTime': 0.77474951171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.79584326171875, 'attempts': 1, 'timeIncrement': 0.02109375, 
+    'increment': 29, 'stepTime': 0.79584326171875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 11, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.82748388671875, 'attempts': 1, 'timeIncrement': 0.031640625, 
+    'increment': 30, 'stepTime': 0.82748388671875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.87494482421875, 'attempts': 1, 
+    'timeIncrement': 0.0474609375, 'increment': 31, 
+    'stepTime': 0.87494482421875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 7, 
+    'phase': STANDARD_PHASE, 'equilibrium': 6})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.87494482421875, 'attempts': ' 1U', 
+    'timeIncrement': 0.0474609375, 'increment': 32, 
+    'stepTime': 0.87494482421875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 2, 'iterations': 8, 
+    'phase': STANDARD_PHASE, 'equilibrium': 6})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.88681005859375, 'attempts': 2, 
+    'timeIncrement': 0.011865234375, 'increment': 32, 
+    'stepTime': 0.88681005859375, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.89867529296875, 'attempts': 1, 
+    'timeIncrement': 0.011865234375, 'increment': 33, 
+    'stepTime': 0.89867529296875, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 12, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.91054052734375, 'attempts': 1, 
+    'timeIncrement': 0.011865234375, 'increment': 34, 
+    'stepTime': 0.91054052734375, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.92833837890625, 'attempts': 1, 
+    'timeIncrement': 0.0177978515625, 'increment': 35, 
+    'stepTime': 0.92833837890625, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.95503515625, 'attempts': 1, 
+    'timeIncrement': 0.02669677734375, 'increment': 36, 
+    'stepTime': 0.95503515625, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.95503515625, 'attempts': ' 1U', 
+    'timeIncrement': 0.040045166015625, 'increment': 37, 
+    'stepTime': 0.95503515625, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 4, 'iterations': 7, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.965046447753906, 'attempts': 2, 
+    'timeIncrement': 0.0100112915039063, 'increment': 37, 
+    'stepTime': 0.965046447753906, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 13, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 0.980063385009766, 'attempts': 1, 
+    'timeIncrement': 0.0150169372558594, 'increment': 38, 
+    'stepTime': 0.980063385009766, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.00258879089355, 'attempts': 1, 
+    'timeIncrement': 0.0225254058837891, 'increment': 39, 
+    'stepTime': 1.00258879089355, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 2, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 4 POINTS', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 4 POINTS', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT IS SO LARGE THAT THE PROGRAM WILL NOT ATTEMPT THE PLASTICITY CALCULATION AT 1 POINTS', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(WARNING, {
+    'phase': STANDARD_PHASE, 
+    'message': 'EXCESSIVE DISTORTION AT A TOTAL OF 333 INTEGRATION POINTS IN SOLID (CONTINUUM) ELEMENTS', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.00258879089355, 'attempts': ' 1U', 
+    'timeIncrement': 0.0337881088256836, 'increment': 40, 
+    'stepTime': 1.00258879089355, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 3, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.00258879089355, 'attempts': ' 2U', 
+    'timeIncrement': 0.0084470272064209, 'increment': 40, 
+    'stepTime': 1.00258879089355, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 5, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.00470054769516, 'attempts': 3, 
+    'timeIncrement': 0.00211175680160522, 'increment': 40, 
+    'stepTime': 1.00470054769516, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.00786818289757, 'attempts': 1, 
+    'timeIncrement': 0.00316763520240784, 'increment': 41, 
+    'stepTime': 1.00786818289757, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 2, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.01261963570118, 'attempts': 1, 
+    'timeIncrement': 0.00475145280361176, 'increment': 42, 
+    'stepTime': 1.01261963570118, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.0197468149066, 'attempts': 1, 
+    'timeIncrement': 0.00712717920541763, 'increment': 43, 
+    'stepTime': 1.0197468149066, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 2, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.0197468149066, 'attempts': ' 1U', 
+    'timeIncrement': 0.0106907688081265, 'increment': 44, 
+    'stepTime': 1.0197468149066, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 7, 'iterations': 7, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.02241950710863, 'attempts': 2, 
+    'timeIncrement': 0.00267269220203161, 'increment': 44, 
+    'stepTime': 1.02241950710863, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.02642854541168, 'attempts': 1, 
+    'timeIncrement': 0.00400903830304742, 'increment': 45, 
+    'stepTime': 1.02642854541168, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.03244210286625, 'attempts': 1, 
+    'timeIncrement': 0.00601355745457113, 'increment': 46, 
+    'stepTime': 1.03244210286625, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 2, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.0414624390481, 'attempts': 1, 
+    'timeIncrement': 0.00902033618185669, 'increment': 47, 
+    'stepTime': 1.0414624390481, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 2, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 14, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.05499294332089, 'attempts': 1, 
+    'timeIncrement': 0.013530504272785, 'increment': 48, 
+    'stepTime': 1.05499294332089, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 1, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.06852344759367, 'attempts': 1, 
+    'timeIncrement': 0.013530504272785, 'increment': 49, 
+    'stepTime': 1.06852344759367, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.08205395186646, 'attempts': 1, 
+    'timeIncrement': 0.013530504272785, 'increment': 50, 
+    'stepTime': 1.08205395186646, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.10234970827564, 'attempts': 1, 
+    'timeIncrement': 0.0202957564091776, 'increment': 51, 
+    'stepTime': 1.10234970827564, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 15, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.1327933428894, 'attempts': 1, 
+    'timeIncrement': 0.0304436346137663, 'increment': 52, 
+    'stepTime': 1.1327933428894, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.17845879481005, 'attempts': 1, 
+    'timeIncrement': 0.0456654519206495, 'increment': 53, 
+    'stepTime': 1.17845879481005, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 16, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.24695697269103, 'attempts': 1, 
+    'timeIncrement': 0.0684981778809743, 'increment': 54, 
+    'stepTime': 1.24695697269103, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 17, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.34695697269103, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 55, 'stepTime': 1.34695697269103, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 18, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {
+    'totalTime': 1.44695697269103, 'attempts': 1, 'timeIncrement': 0.1, 
+    'increment': 56, 'stepTime': 1.44695697269103, 'step': 1, 
+    'jobName': 'nanoindentation_standard', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(ODB_FRAME, {
+    'phase': STANDARD_PHASE, 'step': 0, 'frame': 19, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(STATUS, {'totalTime': 1.5, 
+    'attempts': 1, 'timeIncrement': 0.0530430273089728, 'increment': 57, 
+    'stepTime': 1.5, 'step': 1, 'jobName': 'nanoindentation_standard', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['nanoindentation_standard']._Message(END_STEP, {
+    'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(COMPLETED, {
+    'phase': STANDARD_PHASE, 'message': 'Analysis phase complete', 
+    'jobName': 'nanoindentation_standard'})
+mdb.jobs['nanoindentation_standard']._Message(JOB_COMPLETED, {
+    'time': 'Fri Oct 23 04:58:57 2020', 'jobName': 'nanoindentation_standard'})
+mdb.models['Model-1-Standard'].ConstrainedSketch(name='__profile__', sheetSize=
+    200.0)
+mdb.models['Model-1-Standard'].sketches['__profile__'].CircleByCenterPerimeter(
+    center=(0.0, 0.0), point1=(30.0, 0.0))
+del mdb.models['Model-1-Standard'].sketches['__profile__']
+# Save by s12ma4 on 2021_03_15-14.07.02; build 2018 2017_11_07-17.21.41 127140

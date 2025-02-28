@@ -1,0 +1,64 @@
+
+http://www.columbia.edu/~jk2079/
+
+
+Jeffrey W. Kysar
+Graduate Education:
+
+1998, Ph.D., Engineering Sciences
+1993, S. M., Engineering Sciences
+
+Division of Engineering and Applied Sciences
+Harvard University
+Cambridge, MA 02138
+
+Research Advisor: Professor James R. Rice
+
+kysar@esag.harvard.edu
+
+	Employment:
+Associate Professor
+Department of Mechanical Engineering
+School of Engineering and Applied Science
+Columbia University
+New York, NY 10027
+ 
+
+Tel:  212-854-7432
+Fax: 212-854-3304
+jk2079@columbia.edu
+
+Last updated 2 August 2001.
+Please send comments and report missing links to jk2079@columbia.edu 
+
+################################################################################################
+
+http://www.columbia.edu/~jk2079/Kysar_Research_Laboratory/Single_Crystal_UMAT.html
+
+
+User Material Subroutine for Single Crystal Plasticity
+
+A User Material (UMAT) subroutine that models the deformation of single crystals which undergo plastic deformation can be downloaded. It is suitable for use with the commercial finite element code ABAQUS. The UMAT was originally written in 1991 by Yonggang (Young) Huang, now a faculty member in mechanical engineering at the University of Illinois, Urbana-Champaign, and was modified in 1997 by Jeffrey W. Kysar, now a faculty member in mechanical engineering at Columbia University, New York. Both were in the research group of James R. Rice at Harvard University at the time.
+
+The authors assume no responsibility for errors or omissions in the software or documentation available from this web site. Unfortunately due to time constraints, the authors are not able to respond to requests for assistance on using the software.
+
+The bibliographic citations and download links explaining the work are:
+
+Huang, Y. (1991). "A user-material subroutine incorporating single crystal plasticity in the ABAQUS finite element program, Mech Report 178", Division of Engineering and Applied Sciences, Harvard University, Cambridge, Massachusetts.
+
+Kysar, J. W. (1997). "Addendum to 'A user-material subroutine incorporating single crystal plasticity in the ABAQUS finite element program, Mech Report 178'", Division of Engineering and Applied Sciences, Harvard University, Cambridge, Massachusetts.
+
+(Print copies of these reports are no longer available at Harvard.)
+
+Click here to download a sample ABAQUS input file for the UMAT. It is suitable for ABAQUS v5.6, however recent versions of ABAQUS have routines which will automatically update the input file to be suitable for the current version.
+
+Click here to download only the UMAT Fortran code.
+
+
+################################################################################################
+
+
+I did not check if the two Addendum*.pdf differ in anything else than the first paragraph.
+Regards 
+Frank Richter 
+

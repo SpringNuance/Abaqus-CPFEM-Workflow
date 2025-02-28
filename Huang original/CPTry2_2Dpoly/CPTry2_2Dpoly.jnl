@@ -1,0 +1,7 @@
+# Save by nguyenb5 on 2025_01_27-17.32.26; build 2023.HF4 2023_07_21-20.45.57 RELr425 183702
+from abaqus import *
+upgradeMdb(
+    'C:/LocalUserData/User-data/nguyenb5/Abaqus-Strain-Gradient-Plasticity-Nanoindentation-Project/Huang original/CPTry2_2Dpoly/CPTry2_2Dpoly-6.12-1.cae'
+    , 
+    'C:/LocalUserData/User-data/nguyenb5/Abaqus-Strain-Gradient-Plasticity-Nanoindentation-Project/Huang original/CPTry2_2Dpoly/CPTry2_2Dpoly.cae')
+# Save by nguyenb5 on 2025_01_27-17.32.26; build 2023.HF4 2023_07_21-20.45.57 RELr425 183702
